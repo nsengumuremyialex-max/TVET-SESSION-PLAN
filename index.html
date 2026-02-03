@@ -13,7 +13,7 @@ body{
     max-width:1000px;
     margin:auto;
 }
-h2,h3{text-align:center;margin:5px;}
+h3{text-align:center;margin:8px 0;}
 
 table{
     width:100%;
@@ -70,9 +70,7 @@ button{
     font-size:11px;
     cursor:pointer;
 }
-.paste-area img{
-    max-height:70px;
-}
+.paste-area img{max-height:70px;}
 </style>
 </head>
 
@@ -94,10 +92,17 @@ button{
         <input value="ES KAVUMU TSS" style="text-align:center;font-weight:bold;">
         <input value="District: Ngororero" style="text-align:center;">
         <input value="Sector: Kavumu" style="text-align:center;">
+
+        <!-- Email first -->
         <div>
-            <b>Email:</b> <input value="nsengumuremyialex@gmail.com" style="width:220px;">
-            &nbsp;&nbsp;
-            <b>Tel:</b> <input value="0788774880" style="width:120px;">
+            <b>Email:</b>
+            <input value="nsengumuremyialex@gmail.com" style="width:250px;">
+        </div>
+
+        <!-- Tel on new line -->
+        <div>
+            <b>Tel:</b>
+            <input value="0788774880" style="width:150px;">
         </div>
     </div>
 
@@ -209,30 +214,26 @@ button{
 </div>
 
 <script>
-// PASTE IMAGE ONLY
+// paste image only
 document.querySelectorAll(".paste-area").forEach(area=>{
-    area.addEventListener("paste",function(e){
-        const items=(e.clipboardData || window.clipboardData).items;
+    area.addEventListener("paste",e=>{
+        const items=(e.clipboardData||window.clipboardData).items;
         for(let item of items){
-            if(item.type.indexOf("image")!==-1){
-                const file=item.getAsFile();
+            if(item.type.includes("image")){
                 const reader=new FileReader();
-                const imgId=area.dataset.img;
                 reader.onload=ev=>{
-                    document.getElementById(imgId).src=ev.target.result;
+                    document.getElementById(area.dataset.img).src=ev.target.result;
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(item.getAsFile());
             }
         }
         e.preventDefault();
     });
 });
 
-// PDF
 async function generatePDF(){
     const { jsPDF } = window.jspdf;
     const el=document.getElementById("sessionPlan");
-
     const canvas=await html2canvas(el,{scale:2});
     const img=canvas.toDataURL("image/png");
 
